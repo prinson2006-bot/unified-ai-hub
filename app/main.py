@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -15,7 +16,10 @@ app.add_middleware(
 
 app.include_router(router, prefix="/api")
 
-# NEW: Serve the frontend HTML file at the root URL
+# NEW: Dynamically calculate the absolute path to the root folder
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+HTML_PATH = os.path.join(BASE_DIR, "index.html")
+
 @app.get("/")
 async def serve_frontend():
-    return FileResponse("index.html")
+    return FileResponse(HTML_PATH)
