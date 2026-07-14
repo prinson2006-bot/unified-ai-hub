@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from app.services.router import router
 
 app = FastAPI(title="Unified AI Hub")
 
-# Allow the HTML frontend to talk to this backend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,5 +13,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Attach our API routes
 app.include_router(router, prefix="/api")
+
+# NEW: Serve the frontend HTML file at the root URL
+@app.get("/")
+async def serve_frontend():
+    return FileResponse("index.html")
